@@ -1,3 +1,5 @@
+package poo.rummikub;
+
 import java.util.Vector;
 
 public class Juego {

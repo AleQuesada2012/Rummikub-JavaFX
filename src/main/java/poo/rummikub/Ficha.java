@@ -1,3 +1,5 @@
+package poo.rummikub;
+
 public class Ficha {
     private int num;
 

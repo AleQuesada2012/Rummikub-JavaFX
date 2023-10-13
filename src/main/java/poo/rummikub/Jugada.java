@@ -1,4 +1,6 @@
-    import java.util.Vector;
+package poo.rummikub;
+
+import java.util.Vector;
 
     public class Jugada {
         private Vector<Ficha> jugada;

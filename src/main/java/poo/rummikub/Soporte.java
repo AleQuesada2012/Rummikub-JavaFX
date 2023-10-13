@@ -1,3 +1,4 @@
+package poo.rummikub;
 
 import java.util.*;
 public class Soporte {

@@ -1,3 +1,5 @@
+package poo.rummikub;
+
 import java.util.Scanner;
 import java.util.Vector;
 
