@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poo.rummikub.RummikubController">
+    <Label text="Welcome to Rummikub! Please select the number of players:" />
+
+    <RadioButton fx:id="player2RadioButton" text="2 Players" />
+    <RadioButton fx:id="player3RadioButton" text="3 Players" />
+    <RadioButton fx:id="player4RadioButton" text="4 Players" />
+
+    <TextField fx:id="player1TextField" promptText="Player 1 Name" text="Escriba el nombre del jugador 1..." visible="false" />
+    <TextField fx:id="player2TextField" promptText="Player 2 Name" visible="false" />
+    <TextField fx:id="player3TextField" promptText="Player 3 Name" visible="false" />
+    <TextField fx:id="player4TextField" promptText="Player 4 Name" visible="false" />
+    <Button onAction="#startGame" text="Start Game" />
+
+</VBox>
