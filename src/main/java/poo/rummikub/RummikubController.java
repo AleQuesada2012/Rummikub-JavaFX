@@ -6,6 +6,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class RummikubController {
     public Button startButton;
@@ -50,7 +54,7 @@ public class RummikubController {
     @FXML
     public void handleRadioButtonSelection(ActionEvent event) {
         RadioButton selectedRadioButton = (RadioButton) event.getSource();
-        int selectedPlayerCount = Integer.parseInt(selectedRadioButton.getText().split(" ")[0]);
+        selectedPlayerCount = Integer.parseInt(selectedRadioButton.getText().split(" ")[0]);
 
         // Show/hide text fields based on the selected player count
         player3TextField.setVisible(selectedPlayerCount >= 3);
@@ -68,7 +72,37 @@ public class RummikubController {
         String player3Name = player3TextField.getText();
         String player4Name = player4TextField.getText();
 
+        System.out.println("player1: " + player1Name);
+        System.out.println("player2: " + player2Name);
+        System.out.println("player3: " + player3Name);
+        System.out.println("player4: " + player4Name);
 
+
+        // Get the reference to the current window (stage)
+        Stage currentStage = (Stage) startButton.getScene().getWindow();
+
+        try {
+            // Load the FXML file for the game board
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("RummikubGameBoard.fxml"));
+            Parent gameBoardRoot = loader.load();
+            Scene gameBoardScene = new Scene(gameBoardRoot);
+
+
+            // Create a new stage for the game board
+            Stage gameBoardStage = new Stage();
+            gameBoardStage.setScene(gameBoardScene);
+            gameBoardStage.setTitle("Rummikub - Game Board");
+
+            // obtener la referencia a la clase de control para la siguiente pantalla
+            RummikubGameBoard control = loader.getController();
+            control.initNombres(player1Name, player2Name, player3Name, player4Name); // pasa los parámetros de los nombres
+
+            // cierra la ventana actual y abre el tablero
+            currentStage.close();
+            gameBoardStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Start the game or transition to the game board
         // You can implement this part in your application logic
