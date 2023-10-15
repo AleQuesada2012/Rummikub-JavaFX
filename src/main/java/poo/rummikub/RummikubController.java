@@ -2,11 +2,13 @@ package poo.rummikub;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 
 public class RummikubController {
+    public Button startButton;
     @FXML
     private RadioButton player2RadioButton;
 
@@ -30,7 +32,6 @@ public class RummikubController {
 
     @FXML
     private ToggleGroup jugadoresToggleGroup;
-
     private int selectedPlayerCount = 2; // Initialize with the default value
 
     @FXML
@@ -66,6 +67,8 @@ public class RummikubController {
         String player2Name = player2TextField.getText();
         String player3Name = player3TextField.getText();
         String player4Name = player4TextField.getText();
+
+
 
         // Start the game or transition to the game board
         // You can implement this part in your application logic
