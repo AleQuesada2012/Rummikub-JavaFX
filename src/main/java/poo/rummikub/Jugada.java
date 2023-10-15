@@ -1,4 +1,4 @@
-package poo.rummikub;
+package poo.rummikub;// package src;
 
 import java.util.Vector;
 

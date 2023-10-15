@@ -1,4 +1,4 @@
-package poo.rummikub;
+package poo.rummikub;//package src;
 
 import java.util.Vector;
 
@@ -11,6 +11,9 @@ public class Juego {
     private Vector<Jugador> jugadores;
 
 
+
+
+
     public Juego() {
         Tablero = new Mesa();
         temporalmesa = new Mesa(1);
@@ -20,6 +23,10 @@ public class Juego {
     public void setJugadores(Vector<Jugador> jugadores) {
         this.jugadores = jugadores;
     }
+
+
+
+
 
     public void agregarjugador(Jugador jugador){
         jugadores.add(jugador);
@@ -72,6 +79,28 @@ public class Juego {
 
     }
 
+    public Vector<Ficha> copiarFichasEnMano(Jugador jugador) {
+        Vector<Ficha> copiedTiles = new Vector<>();
+
+        for (Ficha ficha : jugador.getFichasEnMano().getFichas()) {
+            Ficha copiedFicha = new Ficha(ficha.getNum(), ficha.getColor());
+            copiedTiles.add(copiedFicha);
+        }
+
+        return copiedTiles;
+    }
+
+
+
+    public void retirarFicha(int x, int y){
+        Ficha temp = Tablero.getMatrizFichas()[x][y];
+        Tablero.getMatrizFichas()[x][y] = null;
+
+    }
+
+    public Mesa getTemporalmesa() {
+        return temporalmesa;
+    }
 
     public void actualizarMesa(){
         if(temporalmesa.matrizValida()){
@@ -91,5 +120,5 @@ public class Juego {
     public Vector<Jugador> getJugadores() {
         return this.jugadores;
     }
-}
 
+}

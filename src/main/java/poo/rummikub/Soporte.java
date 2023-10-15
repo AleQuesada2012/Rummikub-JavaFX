@@ -1,14 +1,17 @@
-package poo.rummikub;
+package poo.rummikub;//package src;
 
 import java.util.*;
 public class Soporte {
 
     private  Vector<Ficha>fichas;
 
-    int cantfichas;
+    private  int cantfichas;
 
     public Soporte() {
         this.fichas = new Vector<>();
+    }
+    public Soporte(Vector<Ficha>fichas1){
+        this.fichas = fichas1;
     }
 
     public Vector<Ficha> getFichas(){
@@ -44,5 +47,24 @@ public class Soporte {
         fichas.remove(ficha);
         cantfichas--;
     }
+
+    public void setFichas(Vector<Ficha> newTiles) {
+        this.fichas.clear(); // Clear the current tiles
+        this.fichas.addAll(newTiles); // Add the copied tiles
+    }
+
+    public void copiarsoporte(Soporte source) {
+        fichas.clear();
+        for (Ficha ficha : source.getFichas()) {
+            fichas.add(ficha);
+        }
+    }
+
+
+
+
+
+
+
 }
 

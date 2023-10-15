@@ -1,4 +1,4 @@
-package poo.rummikub;
+package poo.rummikub;// package src;
 
 import java.util.Vector;
 
@@ -20,39 +20,86 @@ public class Mesa {
 
 
 
+    public void reintegrar(){
 
-
-    public void ingresarFicha(Ficha ficha, int x, int y) {
-        matrizFichas[x][y] = ficha;
     }
 
-    public boolean matrizValida(){
-        if(estaVacia())return true;
+    public void ingresarFicha(Ficha ficha, int x, int y, Jugador jugador) {
+        if (this.getMatrizFichas()[x][y] == null) {
+            this.getMatrizFichas()[x][y] = ficha;
+            jugador.getFichasEnMano().usarficha(ficha);
+        }
+    }
 
-        boolean esvalida = false;
-        Vector<Ficha> fichas =  new Vector<>();
-        for(int i = 0; i < 15; i++){
-            for(int j = 0; j < 15; j++){
-                if(matrizFichas[i][j]!=null){
+    public void reacomodarFicha(int x, int y, int v, int j) {
+        Ficha ficha = this.matrizFichas[x][y];
+        this.matrizFichas[x][y] = null;
+
+        if (this.matrizFichas[v][j] != null) {
+            System.out.println("Esta posicion ya es ocupada.");
+            return;
+        }
+
+        this.matrizFichas[v][j] = ficha;
+    }
+
+
+
+
+    public boolean matrizValida() {
+        if (estaVacia()) return true;
+        boolean esvalid = false;
+        Vector<Ficha> fichas = new Vector<>();
+
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (matrizFichas[i][j] != null) {
                     fichas.add(matrizFichas[i][j]);
                 }
-                if(matrizFichas[i][j] == null){
+                else if(!fichas.isEmpty()){
                     Jugada posibleJugada = new Jugada(fichas);
-                    if(posibleJugada.serieValida() || posibleJugada.escaleraValida()){
-                        esvalida = true;
-                        fichas.clear();
+                    if (posibleJugada.serieValida() || posibleJugada.escaleraValida()) {
+                        esvalid = true;
                     }
-                    else{
+                    else {
                         return false;
                     }
-
+                    fichas.clear();
                 }
-
-
             }
-
         }
-        return esvalida;
+
+        return esvalid;
+    }
+
+    public boolean valorDeJugada() {
+        Vector<Ficha> fichas = new Vector<>();
+        int cont = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (matrizFichas[i][j] != null) {
+                    fichas.add(matrizFichas[i][j]);
+                }
+                else if(!fichas.isEmpty()){
+                    Jugada posibleJugada = new Jugada(fichas);
+                    if (posibleJugada.serieValida() || posibleJugada.escaleraValida()) {
+                        cont+=posibleJugada.valorJugada();
+                    }
+                    fichas.clear();
+                }
+            }
+        }
+
+        return cont >= 30;
+    }
+
+
+
+
+
+
+    public void recogerfichas(){
+
     }
 
     public boolean estaVacia(){
@@ -67,6 +114,28 @@ public class Mesa {
         return true;
     }
 
+    public void sonpartede() {
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if(this.matrizFichas[i][j]!=null){
+                    this.matrizFichas[i][j].setEsta(true);
+                }
+
+            }
+        }
+    }
+
+    public void restaurarFichas(Jugador jugador){
+        for (int i=0;i<15;i++){
+            for(int j=0;j<15;j++) {
+                if (this.matrizFichas[i][j] != null) {
+                    if (!this.matrizFichas[i][j].isEsta()) {
+                        jugador.getFichasEnMano().ingresarficha(this.matrizFichas[i][j]);
+                    }
+                }
+            }
+        }
+    }
 
 
     public void copiarMesa(Mesa Mesaoriginal) {

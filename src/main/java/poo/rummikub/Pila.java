@@ -1,4 +1,4 @@
-package poo.rummikub;
+package poo.rummikub;// package src;
 
 import java.util.Vector;
 import java.util.Random;
@@ -10,8 +10,8 @@ public class Pila{
     public Pila() {
         Stack = new Vector<>();
         random = new Random();
+        generarpila();
     }
-
 
     public void generarpila() {
         String[] colores = {"N", "A", "Y", "R"};
@@ -23,8 +23,8 @@ public class Pila{
                 }
             }
         }
-        Ficha comodin= new Ficha(14,"comodin");
-        Ficha comodin2= new Ficha(15,"comodin");
+        Ficha comodin = new Ficha(0,"comodin");
+        Ficha comodin2 = new Ficha(0,"comodin");
         Stack.add(comodin);
         Stack.add(comodin2);
     }
@@ -41,5 +41,13 @@ public class Pila{
         Ficha ficha = eliminar(randomficha);
         return ficha;
     }
-    
+
+    public int getStackSize(){
+       return this.Stack.size();
+    }
+
+    public Vector<Ficha> getStack(){
+        return this.Stack;
+    }
+
 }
