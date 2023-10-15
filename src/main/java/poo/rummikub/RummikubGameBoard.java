@@ -77,7 +77,7 @@ public class RummikubGameBoard {
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 button.setOnAction(e -> handleGridButtonAction(e));
 
-                soporteGridPane.add(button, i, j);
+                soporteGridPane.add(button, j, i);
             }
         }
     }
