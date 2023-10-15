@@ -1,6 +1,7 @@
 package poo.rummikub;
 
 import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -40,9 +41,34 @@ public class RummikubGameBoard {
     private GridPane gameGrid;
 
     public void initialize() {
-        // This method is automatically called when the FXML is loaded.
-        // You can perform initialization and setup here.
-        currentPlayerLabel.setText("Jugador Actual: " + this.nombre1);
+        createButtonsForGrid(); // Call a method to create buttons
+    }
+
+    private void createButtonsForGrid() {
+        int rows = 15;
+        int columns = 15;
+
+        for (int row = 0; row < 15; row++) {
+            for (int col = 0; col < 15; col++) {
+                Button button = new Button("Button " + row + "-" + col);
+                button.setUserData(new int[]{row, col}); // Store the row and column index
+                button.setText("");
+                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                // Add an event handler for the button's action
+                button.setOnAction(e -> handleGridButtonAction(e));
+
+                gameGrid.add(button, col, row); // Add the button to the grid
+            }
+        }
+    }
+
+    private void handleGridButtonAction(ActionEvent event) {
+        Button clickedButton = (Button) event.getSource();
+        int[] rowIndex = (int[]) clickedButton.getUserData();
+        int row = rowIndex[0];
+        int col = rowIndex[1];
+        System.out.println("Button clicked at Row " + row + ", Column " + col);
+        // Handle the button click as needed
     }
 
     public void initNombres(String input1, String input2, String input3, String input4) {
