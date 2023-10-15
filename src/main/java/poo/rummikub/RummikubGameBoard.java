@@ -40,16 +40,20 @@ public class RummikubGameBoard {
     @FXML
     private GridPane gameGrid;
 
+    @FXML
+    private GridPane soporteGridPane;
+
     public void initialize() {
         createButtonsForGrid(); // Call a method to create buttons
+        crearBotonesSoporte();
     }
 
     private void createButtonsForGrid() {
         int rows = 15;
         int columns = 15;
 
-        for (int row = 0; row < 15; row++) {
-            for (int col = 0; col < 15; col++) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
                 Button button = new Button("Button " + row + "-" + col);
                 button.setUserData(new int[]{row, col}); // Store the row and column index
                 button.setText("");
@@ -58,6 +62,22 @@ public class RummikubGameBoard {
                 button.setOnAction(e -> handleGridButtonAction(e));
 
                 gameGrid.add(button, col, row); // Add the button to the grid
+            }
+        }
+    }
+
+    private void crearBotonesSoporte() {
+        int filas = 3;
+        int columnas = 15;
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                Button button = new Button("SoporteBtn " + i + '-' + columnas);
+                button.setUserData(new int[] {i, j}); // almacena la fila y columna igual que en el tablero
+                button.setText("");
+                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                button.setOnAction(e -> handleGridButtonAction(e));
+
+                soporteGridPane.add(button, i, j);
             }
         }
     }
