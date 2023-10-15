@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 
 public class RummikubController {
     @FXML
@@ -28,16 +29,37 @@ public class RummikubController {
     private TextField player4TextField;
 
     @FXML
+    private ToggleGroup jugadoresToggleGroup;
+
+    private int selectedPlayerCount = 2; // Initialize with the default value
+
+    @FXML
+    public void initialize() {
+        // Set up the ToggleGroup and initial states here
+        player2RadioButton.setToggleGroup(jugadoresToggleGroup);
+        player3RadioButton.setToggleGroup(jugadoresToggleGroup);
+        player4RadioButton.setToggleGroup(jugadoresToggleGroup);
+
+        // By default, select 2 players and show 2 text fields
+        player2RadioButton.setSelected(true);
+        player3TextField.setVisible(false);
+        player4TextField.setVisible(false);
+    }
+
+    @FXML
+    public void handleRadioButtonSelection(ActionEvent event) {
+        RadioButton selectedRadioButton = (RadioButton) event.getSource();
+        int selectedPlayerCount = Integer.parseInt(selectedRadioButton.getText().split(" ")[0]);
+
+        // Show/hide text fields based on the selected player count
+        player3TextField.setVisible(selectedPlayerCount >= 3);
+        player4TextField.setVisible(selectedPlayerCount == 4);
+    }
+
+    @FXML
     private void startGame(ActionEvent event) {
-        // Get the selected number of players
-        int numberOfPlayers = 0;
-        if (player2RadioButton.isSelected()) {
-            numberOfPlayers = 2;
-        } else if (player3RadioButton.isSelected()) {
-            numberOfPlayers = 3;
-        } else if (player4RadioButton.isSelected()) {
-            numberOfPlayers = 4;
-        }
+        // Now you can access the selected player count from here
+        System.out.println("Selected player count: " + selectedPlayerCount);
 
         // You can access the player names in the text fields here
         String player1Name = player1TextField.getText();

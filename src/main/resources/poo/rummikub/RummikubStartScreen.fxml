@@ -4,16 +4,19 @@
 <?import javafx.scene.layout.*?>
 
 <VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poo.rummikub.RummikubController">
-    <Label text="Welcome to Rummikub! Please select the number of players:" />
+    <Label text="Bienvenido al juego Rummikub! por favor seleccione la cantidad de jugadores:" />
 
-    <RadioButton fx:id="player2RadioButton" text="2 Players" />
-    <RadioButton fx:id="player3RadioButton" text="3 Players" />
-    <RadioButton fx:id="player4RadioButton" text="4 Players" />
+    <RadioButton fx:id="player2RadioButton" text="2 jugadores" textAlignment="CENTER" onAction="#handleRadioButtonSelection">
+      <toggleGroup>
+         <ToggleGroup fx:id="jugadoresToggleGroup" />
+      </toggleGroup></RadioButton>
+    <RadioButton fx:id="player3RadioButton" text="3 jugadores" textAlignment="CENTER" toggleGroup="$jugadoresToggleGroup" onAction="#handleRadioButtonSelection" />
+    <RadioButton fx:id="player4RadioButton" text="4 jugadores" textAlignment="CENTER" toggleGroup="$jugadoresToggleGroup" onAction="#handleRadioButtonSelection" />
 
-    <TextField fx:id="player1TextField" promptText="Player 1 Name" text="Escriba el nombre del jugador 1..." visible="false" />
-    <TextField fx:id="player2TextField" promptText="Player 2 Name" visible="false" />
-    <TextField fx:id="player3TextField" promptText="Player 3 Name" visible="false" />
-    <TextField fx:id="player4TextField" promptText="Player 4 Name" visible="false" />
-    <Button onAction="#startGame" text="Start Game" />
+    <TextField fx:id="player1TextField" alignment="CENTER" promptText="Escriba el nombre del jugador 1..."  />
+    <TextField fx:id="player2TextField" alignment="CENTER" promptText="Escriba el nombre del jugador 2..."  />
+    <TextField fx:id="player3TextField" alignment="CENTER" promptText="Escriba el nombre del jugador 3..." visible="false" />
+    <TextField fx:id="player4TextField" alignment="CENTER" promptText="Escriba el nombre del jugador 4..." visible="false" />
+    <Button onAction="#initialize" text="Start Game" />
 
 </VBox>
