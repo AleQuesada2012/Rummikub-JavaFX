@@ -19,6 +19,7 @@ public class RummikubGameBoard {
     private String nombre4;
 
     private Juego partida;
+    private Jugador jugadorActual; //TODO: utilizar este atributo para la logica del juego
 
     private int indiceSoporte;
     @FXML
@@ -99,6 +100,12 @@ public class RummikubGameBoard {
 
     private void manejarClickFichaSoporte(ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
+        if (clickedButton.getText() == "") {
+            // validar mover la ficha
+            //temporalSoporte = {null, null, null}; // EJEMPLO
+            //TODO: implementar funcionalidad de mover la ficha
+        }
+        //temporalSoporte<1/0, "4F">
         int[] rowIndex = (int[]) clickedButton.getUserData();
         int row = rowIndex[0];
         int col = rowIndex[1];
@@ -108,9 +115,9 @@ public class RummikubGameBoard {
         // Handle the button click as needed
     }
 
-    public void initJuego(Juego partidaCreada) {
+/*    public void initJuego(Juego partidaCreada) {
         this.partida = partidaCreada;
-    }
+    }*/
     public void initNombres(String input1, String input2, String input3, String input4) {
 
         setNombre1(input1);
@@ -128,6 +135,7 @@ public class RummikubGameBoard {
 
         int primerJugadorIndex = partida.determinarOrden();
         Jugador primerJugador = partida.getJugadores().get(primerJugadorIndex);
+        this.jugadorActual = primerJugador;
         System.out.println(primerJugador); // para depurar y ver si se crea el jugador correctamente
         partida.agarrarfichas();
 
@@ -135,6 +143,7 @@ public class RummikubGameBoard {
 
         currentPlayerLabel.setText("Jugando: " + primerJugador.getNombre());
         setSoporteInicial(primerJugador);
+
     }
 
     private Juego getJuego() {
