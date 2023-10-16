@@ -74,7 +74,18 @@ public class Jugador {
         fichasEnMano.ingresarficha(ficha);
     }
 
+
+    @Override
+    public String toString() {
+        return "Jugador{" +
+                "Nombre='" + Nombre + '\'' +
+                ", puntos=" + puntos +
+                ", fichasEnMano=" + fichasEnMano +
+                ", puedoempezar=" + puedoempezar +
+                ", ganador=" + ganador +
+                '}';
     }
+}
 
 
 

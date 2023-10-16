@@ -72,6 +72,28 @@ public class RummikubController {
         String player3Name = player3TextField.getText();
         String player4Name = player4TextField.getText();
 
+/*        Juego juego = new Juego();
+
+        Jugador p1 = new Jugador();
+        p1.setNombre(player1Name);
+        juego.agregarjugador(p1);
+
+        Jugador p2 = new Jugador();
+        p2.setNombre(player2Name);
+        juego.agregarjugador(p2);
+
+        if (!player3Name.isEmpty()) {
+            Jugador p3 = new Jugador();
+            p3.setNombre(player3Name);
+            juego.agregarjugador(p3);
+        }
+
+        if (!player4Name.isEmpty()) {
+            Jugador p4 = new Jugador();
+            p4.setNombre(player4Name);
+            juego.agregarjugador(p4);
+        }*/
+
         System.out.println("player1: " + player1Name);
         System.out.println("player2: " + player2Name);
         System.out.println("player3: " + player3Name);
