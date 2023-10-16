@@ -69,6 +69,16 @@ public class Jugador {
         this.fichasEnMano = nuevoSoporte;
     }
 
+    /**
+     * Metodo para imprimir las fichas contenidas en el soporte del jugador
+     */
+    public void printFichas() {
+        for (int i = 0; i < getFichasEnMano().getCantfichas(); i++) {
+            Ficha fichaTemp = getFichasEnMano().getficha(i);
+            System.out.println(i + ": " + fichaTemp.getNum() + " " + fichaTemp.getColor());
+        }
+    }
+
 
     public void agregarFicha(Ficha ficha) {
         fichasEnMano.ingresarficha(ficha);
