@@ -28,11 +28,20 @@ public class RummikubGameBoard {
 
     private Ficha fichaActual; // apunta a una ficha temporal que se podria mover
 
+    private int[] coordenadasFicha;
+
     private int turnoActual; // guarda el numero de turnos jugados
 
     private boolean vieneDelSoporte;
 
     private int indiceSoporte; // guarda la posicion en el soporte que tiene la ficha actual
+
+    private int primerJugadorIndex;
+    private Button botonPrevio;
+
+    private Button[][] botonesTablero;
+
+    private int cantidadPreviaDeFichas;
     @FXML
     private AnchorPane rootPane;
 
@@ -66,19 +75,22 @@ public class RummikubGameBoard {
     }
 
     private void createButtonsForGrid() {
+        botonesTablero = new Button[15][15];
         int rows = 15;
         int columns = 15;
         int contieneFicha = 0;
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
-                Button button = new Button("Button " + row + "-" + col);
-                button.setUserData(new int[]{row, col, contieneFicha}); // Store the row and column index
-                button.setText("");
-                button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                botonesTablero[row][col] = new Button("Button " + row + "-" + col);
+                botonesTablero[row][col].setUserData(new int[]{row, col, contieneFicha}); // Store the row and column index
+                botonesTablero[row][col].setText("");
+                botonesTablero[row][col].setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 // Add an event handler for the button's action
-                button.setOnAction(e -> manejarClickFichaMatriz(e));
+                botonesTablero[row][col].setOnAction(e -> manejarClickFichaMatriz(e));
 
-                gameGrid.add(button, col, row); // Add the button to the grid
+                gameGrid.add(botonesTablero[row][col], col, row); // Add the button to the grid
+                //GridPane.setRowIndex(button, row);
+                //GridPane.setColumnIndex(button, col);
             }
         }
     }
@@ -119,9 +131,50 @@ public class RummikubGameBoard {
                 this.setSoporteInicial(jugadorActual);
                 this.cargarTableroTemporal();
             }
+            if (fichaActual != null && !vieneDelSoporte) {
+                // entra cuando lo que se quiere hacer es mover una ficha del tablero a la que ya se le hizo click
+                if (jugadorActual.isPuedoempezar() && botonPrevio != null) {
+
+                    // restaura que el boton anterior ya no contenga que si tiene ficha.
+                    int[] datosBoton = (int[]) botonPrevio.getUserData();
+                    datosBoton[2] = 0; // ahora el boton previo no deberia tener ficha
+                    botonPrevio.setUserData(datosBoton);
+
+                    clickedButton.setStyle(botonPrevio.getStyle());
+                    clickedButton.setText(botonPrevio.getText());// copia la apariencia del boton anterior
+                    //
+                    datosBoton = (int[]) clickedButton.getUserData();
+                    datosBoton[2] = 1; //ahora el boton nuevo si tiene ficha.
+
+                    int[] datosBtnPrevio = (int[]) botonPrevio.getUserData();
+                    partida.getTemporalmesa().reacomodarFicha(datosBtnPrevio[0], datosBtnPrevio[1], datosBoton[0], datosBoton[1]);
+
+                    botonPrevio.setStyle("");
+                    botonPrevio.setText("");
+                    //partida.getTemporalmesa().reacomodarFicha(coordenadasFicha[0], coordenadasFicha[1], row, col);
+                    cargarTableroTemporal();
+                    // despues de reubicar la ficha, se pone el valor de la ficha actual en nulo, y de las coordenadas en el valor de conveniencia
+                    fichaActual = null;
+                    botonPrevio = null;
+                } else {
+                    showErrorMessage("No puede manipular las fichas del tablero hasta que haga su primera jugada.");
+                }
+            }
         }
         else {
-            //TODO: add logic for when players can and can't move tiles from the board (until they've played the first move).
+            if (fichaActual == null) {
+                System.out.println("entra a que la ficha actual es nula y el boton si tiene ficha");
+                // no hace falta validar si la seleccion es del soporte porque el metodo se llama solo si se presiona un boton en el tablero
+                if (jugadorActual.isPuedoempezar() && botonPrevio == null) {
+                    System.out.println("entra a cuando saca la ficha actual del boton cliqueado");
+                    fichaActual = partida.getTemporalmesa().getFichaEnXY(row, col);
+                    System.out.println("Ficha Actual: " + fichaActual.getNum() + fichaActual.getColor());
+                    botonPrevio = clickedButton;
+                }
+                else {
+                    showErrorMessage("No puede manipular fichas del tablero hasta hacer una jugada de 30 puntos.");
+                }
+            }
         }
 
         System.out.println("Button clicked at Row " + row + ", Column " + col);
@@ -155,6 +208,14 @@ public class RummikubGameBoard {
                 this.cargarTableroTemporal();
             }
         }
+        else {
+            System.out.println("entra a que la ficha actual no era nula y va a cambiar la referencia");
+            if (vieneDelSoporte) {
+                // lo que quiere hacer aqui es escoger otra ficha del soporte
+                this.fichaActual = jugadorActual.escogerficha(indiceOriginal);
+                System.out.println("ficha actual: " + fichaActual.getNum() + fichaActual.getColor());
+            }
+        }
 
 
         System.out.println("Button clicked at Row " + row + ", Column " + col);
@@ -180,7 +241,7 @@ public class RummikubGameBoard {
     private void startGame() {
         this.partida = getJuego();
 
-        int primerJugadorIndex = partida.determinarOrden();
+        primerJugadorIndex = partida.determinarOrden();
         Jugador primerJugador = partida.getJugadores().get(primerJugadorIndex);
         this.jugadorActual = primerJugador;
         System.out.println(primerJugador); // para depurar y ver si se crea el jugador correctamente
@@ -188,6 +249,9 @@ public class RummikubGameBoard {
 
         boolean gameOver = false;
         turnoActual = 1;
+        fichaActual = null;
+        //coordenadasFicha = new int[]{-1, -1};
+        botonPrevio = null;
         currentPlayerLabel.setText("Jugando: " + primerJugador.getNombre());
         setSoporteInicial(primerJugador);
         cargarTableroTemporal();
@@ -364,11 +428,13 @@ public class RummikubGameBoard {
 
     @FXML
     private void handleValidateTurnButton() {
-        // Define the action to be performed when the "Validate Turn" button is clicked.
-        turnoActual ++;
-        turnLabel.setText("Turno: " + turnoActual);
-        boolean puedePasarTurno = partida.getTemporalmesa().matrizValida();
-        if (!puedePasarTurno) {
+        fichaActual = null;
+        botonPrevio = null;
+
+        if (partida.getTemporalmesa().valorDeJugada() && partida.getTemporalmesa().matrizValida()) {
+            jugadorActual.setPuedoempezar(true);
+        }
+        if (!jugadorActual.isPuedoempezar()) {
             showErrorMessage("Su última jugada fue inválida. Intente de nuevo");
             partida.getTemporalmesa().restaurarFichas(jugadorActual);
             partida.getTemporalmesa().copiarMesa(partida.getTablero());
@@ -376,16 +442,64 @@ public class RummikubGameBoard {
             cargarTableroTemporal();
         }
         else {
+            // entra cuando se puede cambiar de turno porque supera los 30 puntos y es valido
+            if (partida.getTemporalmesa().matrizValida() && cantidadPreviaDeFichas < partida.getTemporalmesa().getCantFichas()) {
+                partida.getTablero().copiarMesa(partida.getTemporalmesa());
+                partida.getTablero().sonpartede();
 
+                cantidadPreviaDeFichas = partida.getTablero().getCantFichas();
+
+                int indiceSigJugador = (primerJugadorIndex + 1) % partida.getJugadores().size();
+                primerJugadorIndex = indiceSigJugador;
+                jugadorActual = partida.getJugadores().get(primerJugadorIndex);
+
+                turnoActual ++;
+                turnLabel.setText("Turno: " + turnoActual);
+                currentPlayerLabel.setText("Jugando: " + jugadorActual.getNombre());
+
+                cargarTableroValido();
+                setSoporteInicial(jugadorActual);
+            }
+            else {
+                showErrorMessage("Debe colocar o tomar una ficha para pasar turno.");
+                partida.getTemporalmesa().restaurarFichas(jugadorActual);
+                partida.getTemporalmesa().copiarMesa(partida.getTablero());
+                setSoporteInicial(jugadorActual);
+                cargarTableroTemporal();
+            }
         }
     }
 
     @FXML
     private void handleDrawTileButton() {
-        // Define the action to be performed when the "Draw Tile" button is clicked.
-    }
+        fichaActual = null;
+        botonPrevio = null;
+        if (partida.getTemporalmesa().matrizValida()) {
+            Ficha tomada = partida.getTablero().agarrarpila();
+            if (tomada != null) { // si no es nulo es porque aun quedan fichas en la pila
+                jugadorActual.getFichasEnMano().ingresarficha(tomada);
+                int indiceSigJugador = (primerJugadorIndex + 1) % partida.getJugadores().size();
+                primerJugadorIndex = indiceSigJugador;
+                jugadorActual = partida.getJugadores().get(primerJugadorIndex);
+                cargarTableroValido();
+                setSoporteInicial(jugadorActual);
 
-    // You can add more methods and logic as needed for your game board.
+                cantidadPreviaDeFichas = partida.getTablero().getCantFichas();
+
+                turnoActual ++;
+                turnLabel.setText("Turno: " + turnoActual);
+                currentPlayerLabel.setText("Jugando: " + jugadorActual.getNombre());
+            }
+        }
+        else {
+            showErrorMessage("La disposición del tablero no era válida. Por favor reorganice sus fichas.");
+            partida.getTemporalmesa().restaurarFichas(jugadorActual);
+            partida.getTemporalmesa().copiarMesa(partida.getTablero());
+            setSoporteInicial(jugadorActual);
+            cargarTableroTemporal();
+
+        }
+    }
 
     public void setNombre1(String nombre1) {
         this.nombre1 = nombre1;

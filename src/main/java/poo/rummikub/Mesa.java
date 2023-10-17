@@ -24,6 +24,26 @@ public class Mesa {
 
     }
 
+    /**
+     * método para conocer la cantidad de fichas válidas dentro del tablero de 15x15
+     * @return un valor entero que refleja cuántas fichas existen en la mesa
+     */
+    public int getCantFichas() {
+        int contador = 0;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (this.getMatrizFichas()[i][j] != null) {
+                    contador++;
+                }
+            }
+
+        }
+        return contador;
+    }
+
+    public Ficha getFichaEnXY(int x, int y) {
+        return this.getMatrizFichas()[x][y];
+    }
     public void ingresarFicha(Ficha ficha, int x, int y, Jugador jugador) {
         if (this.getMatrizFichas()[x][y] == null) {
             this.getMatrizFichas()[x][y] = ficha;
@@ -77,7 +97,7 @@ public class Mesa {
         int cont = 0;
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
-                if (matrizFichas[i][j] != null) {
+                if (matrizFichas[i][j] != null && !matrizFichas[i][j].isEsta()) {
                     fichas.add(matrizFichas[i][j]);
                 }
                 else if(!fichas.isEmpty()){

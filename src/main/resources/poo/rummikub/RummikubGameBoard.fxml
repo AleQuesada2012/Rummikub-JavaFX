@@ -12,7 +12,7 @@
             <Label fx:id="currentPlayerLabel" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="151.0" text="Jugador Actual: playerName" textAlignment="CENTER" wrapText="true" />
             <Label fx:id="turnLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="151.0" text="Turno Actual: turnCounter" textAlignment="CENTER" wrapText="true" />
             <Button fx:id="validateTurnButton" mnemonicParsing="false" text="Validar turno" onAction="#handleValidateTurnButton" />
-            <Button fx:id="drawTileButton" mnemonicParsing="false" text="Tomar ficha" />
+            <Button fx:id="drawTileButton" mnemonicParsing="false" text="Tomar ficha" onAction="#handleDrawTileButton"/>
          </children>
          <padding>
             <Insets top="5.0" />
