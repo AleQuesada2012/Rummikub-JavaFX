@@ -87,6 +87,16 @@ public class Mesa {
                     fichas.clear();
                 }
             }
+            if(!fichas.isEmpty()){
+                Jugada posibleJugada = new Jugada(fichas);
+                if (posibleJugada.serieValida() || posibleJugada.escaleraValida()) {
+                    esvalid = true;
+                }
+                else {
+                    return false;
+                }
+                fichas.clear();
+            }
         }
 
         return esvalid;
