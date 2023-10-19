@@ -1,5 +1,6 @@
 package poo.rummikub;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,10 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -167,7 +165,24 @@ public class RummikubGanador {
         }
     }
 
+    public void terminarJuego() {
+        // Create a confirmation dialog
+        Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationDialog.setTitle("Saliendo del juego...");
+        confirmationDialog.setHeaderText("Gracias por jugar!");
+        confirmationDialog.setContentText("¿Está seguro que desea salir? se perderá el progreso de las partidas jugadas.");
 
+        // Add "OK" and "Cancel" buttons
+        confirmationDialog.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
+
+        // Show the dialog and wait for the user's response
+        ButtonType userResponse = confirmationDialog.showAndWait().orElse(ButtonType.CANCEL);
+
+        // If the user clicks "OK," exit the application
+        if (userResponse == ButtonType.OK) {
+            Platform.exit();
+        }
+    }
 
     public Vector<Jugador> getJugadores() {
         return jugadores;
