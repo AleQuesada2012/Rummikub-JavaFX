@@ -14,9 +14,13 @@ import java.util.Vector;
             jugada = lista;
         }
 
+        /**
+         * Metodo para verificar que la secuencia de fichas del tipo escalera sea valido
+         * @return
+         */
         public boolean escaleraValida() {
             int escalera = jugada.size();
-            if (escalera < 3) {
+            if (escalera < 3 || escalera > 13) {
                 return false;
             }
             else {
@@ -30,10 +34,19 @@ import java.util.Vector;
                     Ficha currentTile = this.jugada.get(i);
                     Ficha siguiente = this.jugada.get(i+1);
 
+                    if(currentTile.getNum()==13 && siguiente.getColor().equals("comodin")){
+                        return false;
+                    }
+
 
                     if("comodin".equals(currentTile.getColor())){
                         if(i == 0){
-                            continue;
+                            if(siguiente.getNum() != 1){ //Si no es el primero y el siguiente no es uno, va bien
+                                continue;
+                            }
+                            else {
+                                return false;
+                            }
                         }
                     }
 
@@ -51,9 +64,13 @@ import java.util.Vector;
             return true;
         }
 
+        /**
+         * Metodo el cual verifica si la secuencia de fichas del tipo serie sea valido
+         * @return Un booleano que verifica si la jugada fue correcta
+         */
         public boolean serieValida() {
             int serie = this.jugada.size();
-            if (serie < 3) {
+            if (serie < 3 || serie > 4) {
                 return false;
             } else {
                 Vector<String> color = new Vector<>();
@@ -77,6 +94,10 @@ import java.util.Vector;
             }
         }
 
+        /**
+         * Metodo para calcular el valor de una jugada según los puntos de las fichas
+         * @return un valor entero que representa los puntos de la jugada calculada
+         */
         public int valorJugada(){
             int cont = 0;
             if(this.escaleraValida() || this.serieValida()){

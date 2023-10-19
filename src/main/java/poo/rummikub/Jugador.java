@@ -5,7 +5,9 @@ import java.util.*;
 public class Jugador {
     private String Nombre;
     private int puntos;
-    private  Soporte fichasEnMano;
+
+    private Vector<Integer> listaPuntos;
+    private Soporte fichasEnMano;
     private boolean puedoempezar;
     private boolean ganador;
 
@@ -17,16 +19,21 @@ public class Jugador {
         Nombre = nombre;
     }
 
-    public int getPuntos() {
-        return puntos;
+    public Vector<Integer> getPuntos() {
+        return this.listaPuntos;
     }
 
     public void setPuntos(int puntos) {
-        this.puntos = puntos;
+        // se cambian los puntos por un vector para tener registro de las partidas anteriores.
+        this.listaPuntos.add(puntos);
+    }
+
+    public void crearVectorPuntos() {
+        this.listaPuntos = new Vector<>();
     }
 
     public void setFichasEnMano() {
-        this.fichasEnMano = new Soporte();
+            this.fichasEnMano = new Soporte();
     }
 
     public Soporte getFichasEnMano() {
@@ -41,7 +48,7 @@ public class Jugador {
         this.ganador = ganador;
     }
 
-    public boolean isPuedoempezar() {
+    public boolean puedoEmpezar() {
         return puedoempezar;
     }
 
@@ -54,17 +61,7 @@ public class Jugador {
     public Ficha escogerficha(int x){
         return fichasEnMano.getficha(x);
     }
-    public Jugada crearjugada(Vector<Integer> indices) {
-        Vector<Ficha> seleccionadas = new Vector<>();
 
-        for (int indice : indices) {
-            if (indice >= 0 && indice < fichasEnMano.getCantfichas()) {
-                seleccionadas.add(fichasEnMano.getficha(indice));
-            }
-        }
-
-        return new  Jugada(seleccionadas);
-    }
     public void setFichasEnMano(Soporte nuevoSoporte) {
         this.fichasEnMano = nuevoSoporte;
     }
@@ -82,6 +79,13 @@ public class Jugador {
 
     public void agregarFicha(Ficha ficha) {
         fichasEnMano.ingresarficha(ficha);
+    }
+
+    public void reestablecerJugador() {
+        setGanador(false);
+        setFichasEnMano(); // hace un soporte nuevo por lo que basta para reestablecer
+        setPuedoempezar(false);
+        //TODO: eliminar el atributo puntos si ya no se va a usar
     }
 
 

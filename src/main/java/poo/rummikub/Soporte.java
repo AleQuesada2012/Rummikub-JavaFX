@@ -33,7 +33,12 @@ public class Soporte {
     public int getsumadefichas(){
         int cont = 0;
         for( Ficha ficha : fichas){
-            cont+=ficha.getNum();
+            if (ficha.getNum() == 0) {
+                cont += 30;
+            }
+            else {
+                cont+=ficha.getNum();
+            }
         }
         return cont;
     }

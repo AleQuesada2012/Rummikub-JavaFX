@@ -2,7 +2,10 @@ package poo.rummikub;
 
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -10,9 +13,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.util.Vector;
 
 
 public class RummikubGameBoard {
@@ -24,13 +28,18 @@ public class RummikubGameBoard {
     private String nombre4;
 
     private Juego partida; // instancia que regula los tableros, jugadores, y cumplimiento de las reglas del juego
-    private Jugador jugadorActual; //TODO: utilizar este atributo para la logica del juego
+    private Jugador jugadorActual;
+
 
     private Ficha fichaActual; // apunta a una ficha temporal que se podria mover
 
-    private int[] coordenadasFicha;
+    private Vector<Jugador> jugadores;
+
+    private Vector<Jugador> jugadoresEnTurnoFinal;
 
     private int turnoActual; // guarda el numero de turnos jugados
+
+    private int pilaActual; // guarda la cantidad de fichas restantes en la pila
 
     private boolean vieneDelSoporte;
 
@@ -72,6 +81,8 @@ public class RummikubGameBoard {
     public void initialize() {
         createButtonsForGrid(); // Call a method to create buttons
         crearBotonesSoporte();
+        this.jugadores = new Vector<>();
+        this.jugadoresEnTurnoFinal = new Vector<>();
     }
 
     private void createButtonsForGrid() {
@@ -133,7 +144,7 @@ public class RummikubGameBoard {
             }
             if (fichaActual != null && !vieneDelSoporte) {
                 // entra cuando lo que se quiere hacer es mover una ficha del tablero a la que ya se le hizo click
-                if (jugadorActual.isPuedoempezar() && botonPrevio != null) {
+                if (jugadorActual.puedoEmpezar() && botonPrevio != null) {
 
                     // restaura que el boton anterior ya no contenga que si tiene ficha.
                     int[] datosBoton = (int[]) botonPrevio.getUserData();
@@ -165,7 +176,7 @@ public class RummikubGameBoard {
             if (fichaActual == null) {
                 System.out.println("entra a que la ficha actual es nula y el boton si tiene ficha");
                 // no hace falta validar si la seleccion es del soporte porque el metodo se llama solo si se presiona un boton en el tablero
-                if (jugadorActual.isPuedoempezar() && botonPrevio == null) {
+                if (jugadorActual.puedoEmpezar() && botonPrevio == null) {
                     System.out.println("entra a cuando saca la ficha actual del boton cliqueado");
                     fichaActual = partida.getTemporalmesa().getFichaEnXY(row, col);
                     System.out.println("Ficha Actual: " + fichaActual.getNum() + fichaActual.getColor());
@@ -210,10 +221,12 @@ public class RummikubGameBoard {
         }
         else {
             System.out.println("entra a que la ficha actual no era nula y va a cambiar la referencia");
-            if (vieneDelSoporte) {
+            if (vieneDelSoporte && tieneFicha == 1) {
                 // lo que quiere hacer aqui es escoger otra ficha del soporte
                 this.fichaActual = jugadorActual.escogerficha(indiceOriginal);
                 System.out.println("ficha actual: " + fichaActual.getNum() + fichaActual.getColor());
+            } else if (vieneDelSoporte && tieneFicha == 0) {
+                this.fichaActual = null;
             }
         }
 
@@ -239,6 +252,8 @@ public class RummikubGameBoard {
     }
 
     private void startGame() {
+        this.jugadores.clear(); // para asegurarse que antes de jugar por primera vez no exista referencia a otros jugadores
+
         this.partida = getJuego();
 
         primerJugadorIndex = partida.determinarOrden();
@@ -249,6 +264,7 @@ public class RummikubGameBoard {
 
         boolean gameOver = false;
         turnoActual = 1;
+        pilaActual = partida.getTablero().getFichas().getStackSize();
         fichaActual = null;
         //coordenadasFicha = new int[]{-1, -1};
         botonPrevio = null;
@@ -256,6 +272,35 @@ public class RummikubGameBoard {
         setSoporteInicial(primerJugador);
         cargarTableroTemporal();
         turnLabel.setText("Turno: " + turnoActual);
+        drawTileButton.setText("Tomar ficha (" + pilaActual + ")");
+    }
+
+    public void volverAJugar(Vector<Jugador> jugadores) {
+        this.jugadores = jugadores;
+        this.partida = new Juego(); // se reinicia
+        for (Jugador jugador: jugadores) {
+            jugador.reestablecerJugador();
+            jugador.setFichasEnMano();
+            this.partida.agregarjugador(jugador);
+        }
+        // se realiza el mismo proceso de inicialización para jugar una nueva partida
+        primerJugadorIndex = partida.determinarOrden();
+        Jugador primerJugador = partida.getJugadores().get(primerJugadorIndex);
+        this.jugadorActual = primerJugador;
+        System.out.println(primerJugador); // para depurar y ver si se crea el jugador correctamente
+        partida.agarrarfichas();
+
+        boolean gameOver = false;
+        turnoActual = 1;
+        pilaActual = partida.getTablero().getFichas().getStackSize();
+        fichaActual = null;
+        //coordenadasFicha = new int[]{-1, -1};
+        botonPrevio = null;
+        currentPlayerLabel.setText("Jugando: " + primerJugador.getNombre());
+        setSoporteInicial(primerJugador);
+        cargarTableroTemporal();
+        turnLabel.setText("Turno: " + turnoActual);
+        drawTileButton.setText("Tomar ficha (" + pilaActual + ")");
     }
 
     private Juego getJuego() {
@@ -263,25 +308,33 @@ public class RummikubGameBoard {
         Jugador j1 = new Jugador();
         j1.setNombre(nombre1);
         j1.setFichasEnMano();
+        j1.crearVectorPuntos();
         partida.agregarjugador(j1);
+        jugadores.add(j1);
 
         Jugador j2 = new Jugador();
         j2.setNombre(nombre2);
         j2.setFichasEnMano();
+        j2.crearVectorPuntos();
         partida.agregarjugador(j2);
+        jugadores.add(j2);
 
         if (!nombre3.isEmpty()) {
             Jugador j3 = new Jugador();
             j3.setNombre(nombre3);
             j3.setFichasEnMano();
+            j3.crearVectorPuntos();
             partida.agregarjugador(j3);
+            jugadores.add(j3);
         }
 
         if (!nombre4.isEmpty()) {
             Jugador j4 = new Jugador();
             j4.setNombre(nombre4);
             j4.setFichasEnMano();
+            j4.crearVectorPuntos();
             partida.agregarjugador(j4);
+            jugadores.add(j4);
         }
         return partida;
     }
@@ -434,7 +487,7 @@ public class RummikubGameBoard {
         if (partida.getTemporalmesa().valorDeJugada() && partida.getTemporalmesa().matrizValida()) {
             jugadorActual.setPuedoempezar(true);
         }
-        if (!jugadorActual.isPuedoempezar()) {
+        if (!jugadorActual.puedoEmpezar()) {
             showErrorMessage("Su última jugada fue inválida. Intente de nuevo");
             partida.getTemporalmesa().restaurarFichas(jugadorActual);
             partida.getTemporalmesa().copiarMesa(partida.getTablero());
@@ -444,6 +497,12 @@ public class RummikubGameBoard {
         else {
             // entra cuando se puede cambiar de turno porque supera los 30 puntos y es valido
             if (partida.getTemporalmesa().matrizValida() && cantidadPreviaDeFichas < partida.getTemporalmesa().getCantFichas()) {
+
+                if (jugadorActual.getFichasEnMano().getCantfichas() == 0) {
+                    partida.sumarPuntos();
+                    terminarPartida();
+                }
+
                 partida.getTablero().copiarMesa(partida.getTemporalmesa());
                 partida.getTablero().sonpartede();
 
@@ -461,7 +520,7 @@ public class RummikubGameBoard {
                 setSoporteInicial(jugadorActual);
             }
             else {
-                showErrorMessage("Debe colocar o tomar una ficha para pasar turno.");
+                showErrorMessage("Debe agregar una jugada válida para pasar turno, o tomar ficha.");
                 partida.getTemporalmesa().restaurarFichas(jugadorActual);
                 partida.getTemporalmesa().copiarMesa(partida.getTablero());
                 setSoporteInicial(jugadorActual);
@@ -476,7 +535,14 @@ public class RummikubGameBoard {
         botonPrevio = null;
         if (partida.getTemporalmesa().matrizValida()) {
             Ficha tomada = partida.getTablero().agarrarpila();
-            if (tomada != null) { // si no es nulo es porque aun quedan fichas en la pila
+
+            if (pilaActual > 0) { // si no es nulo es porque aun quedan fichas en la pila
+                pilaActual--;
+                drawTileButton.setText("Tomar ficha (" + pilaActual + ")");
+                // en caso de que la persona coloca una jugada válida pero elige tomar ficha, se restauran
+                partida.getTemporalmesa().restaurarFichas(jugadorActual);
+                partida.getTemporalmesa().copiarMesa(partida.getTablero());
+
                 jugadorActual.getFichasEnMano().ingresarficha(tomada);
                 int indiceSigJugador = (primerJugadorIndex + 1) % partida.getJugadores().size();
                 primerJugadorIndex = indiceSigJugador;
@@ -490,6 +556,30 @@ public class RummikubGameBoard {
                 turnLabel.setText("Turno: " + turnoActual);
                 currentPlayerLabel.setText("Jugando: " + jugadorActual.getNombre());
             }
+            else {
+                if (jugadoresEnTurnoFinal.size() == jugadores.size()) {
+                    partida.sumarPuntos();
+                    terminarPartida();
+                }
+                else{
+                    partida.getTemporalmesa().restaurarFichas(jugadorActual);
+                    partida.getTemporalmesa().copiarMesa(partida.getTablero());
+
+                    jugadoresEnTurnoFinal.add(jugadorActual);
+
+                    int indiceSigJugador = (primerJugadorIndex + 1) % partida.getJugadores().size();
+                    primerJugadorIndex = indiceSigJugador;
+                    jugadorActual = partida.getJugadores().get(primerJugadorIndex);
+                    cargarTableroValido();
+                    setSoporteInicial(jugadorActual);
+
+                    cantidadPreviaDeFichas = partida.getTablero().getCantFichas();
+
+                    turnoActual ++;
+                    turnLabel.setText("Turno: " + turnoActual);
+                    currentPlayerLabel.setText("Jugando: " + jugadorActual.getNombre());
+                }
+            }
         }
         else {
             showErrorMessage("La disposición del tablero no era válida. Por favor reorganice sus fichas.");
@@ -498,6 +588,32 @@ public class RummikubGameBoard {
             setSoporteInicial(jugadorActual);
             cargarTableroTemporal();
 
+        }
+    }
+
+    private void terminarPartida() {
+        Stage currentStage = (Stage) gameGrid.getScene().getWindow();
+
+        try {
+            // Carga el archivo FXML para la pantalla de juego
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("RummikubGanador.fxml"));
+            Parent puntajesRoot = loader.load();
+            Scene puntajesScene = new Scene(puntajesRoot);
+
+
+            // Crea un nuevo escenario para la pantalla de juego
+            Stage gameBoardStage = new Stage();
+            gameBoardStage.setScene(puntajesScene);
+            gameBoardStage.setTitle("Rummikub - Game Board");
+
+            // obtener la referencia a la clase de control para volver a la pantalla de juego
+            RummikubGanador control = loader.getController();
+            control.recibirJugadores(this.jugadores);
+            // cierra la ventana de juego y abre la de puntajes
+            currentStage.close();
+            gameBoardStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

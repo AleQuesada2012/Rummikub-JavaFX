@@ -1,7 +1,6 @@
 package poo.rummikub;
 
 import java.util.Scanner;
-import java.util.Vector;
 
 public class Main {
     public static void main(String[] args) {
@@ -102,7 +101,7 @@ public class Main {
                     juego.getTemporalmesa().imprimirMesa();
 
                 } else if (moveTypeInput.equals("2")) {
-                    if (currentPlayer.isPuedoempezar()) {
+                    if (currentPlayer.puedoEmpezar()) {
                         // Code for moving a tile on the table
                         System.out.println("Enter the row (x) and column (y) indices of the tile you want to move (e.g., 0 1):");
                         String fromIndicesInput = scanner.nextLine();
@@ -162,7 +161,7 @@ public class Main {
                     if (juego.getTemporalmesa().valorDeJugada() && juego.getTemporalmesa().matrizValida()) {
                         currentPlayer.setPuedoempezar(true);
                     }
-                    if (currentPlayer.isPuedoempezar()) {
+                    if (currentPlayer.puedoEmpezar()) {
                         if (juego.getTemporalmesa().matrizValida()) {
                             System.out.println("Turn finished.");
 

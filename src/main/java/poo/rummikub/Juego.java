@@ -54,13 +54,13 @@ public class Juego {
         int cont = 0;
         Jugador ganador = null;
         for(Jugador jugador : jugadores){
-            if(jugador.getFichasEnMano().getsumadefichas()==0){
+            if(jugador.getFichasEnMano().getCantfichas()==0){
                 jugador.setGanador(true);
                 ganador = jugador;
 
             }
             else {
-                jugador.setPuntos(-(jugador.getFichasEnMano().getsumadefichas()));
+                jugador.setPuntos(jugador.getFichasEnMano().getsumadefichas() * -1); // le coloca en negativo los puntos al jugador
                 cont += jugador.getFichasEnMano().getsumadefichas();
 
             }
