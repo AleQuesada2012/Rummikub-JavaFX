@@ -558,7 +558,7 @@ public class RummikubGameBoard {
             }
             else {
                 if (jugadoresEnTurnoFinal.size() == jugadores.size()) {
-                    partida.sumarPuntos();
+                    partida.sumarPuntosPilaEnCero();
                     terminarPartida();
                 }
                 else{

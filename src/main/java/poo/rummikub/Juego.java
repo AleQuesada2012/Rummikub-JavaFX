@@ -53,20 +53,44 @@ public class Juego {
     public void sumarPuntos(){
         int cont = 0;
         Jugador ganador = null;
-        for(Jugador jugador : jugadores){
+        for(Jugador jugador : getJugadores()){
             if(jugador.getFichasEnMano().getCantfichas()==0){
                 jugador.setGanador(true);
                 ganador = jugador;
 
             }
             else {
-                jugador.setPuntos(jugador.getFichasEnMano().getsumadefichas() * -1); // le coloca en negativo los puntos al jugador
-                cont += jugador.getFichasEnMano().getsumadefichas();
+                int puntos = jugador.getFichasEnMano().getsumadefichas();
+                jugador.setPuntos(puntos * -1); // le coloca en negativo los puntos al jugador
+                jugador.setPuntosTotales(jugador.getPuntosTotales()  + (puntos * -1));
+                cont += puntos;
 
             }
         }
         if(ganador!=null){
             ganador.setPuntos(cont);
+        }
+    }
+
+    public void sumarPuntosPilaEnCero() {
+        Jugador ganador = null;
+        int sumaMenorDePuntos = 1000000;
+        for (Jugador jugador : getJugadores()) {
+            if (jugador.getFichasEnMano().getsumadefichas() < sumaMenorDePuntos) {
+                ganador = jugador;
+                sumaMenorDePuntos = jugador.getFichasEnMano().getsumadefichas();
+            }
+        }
+        ganador.setGanador(true);
+
+        // se vuelven a recorrer, esta vez ya sabiendo el que tenía la cantidad menor de puntos
+        for (Jugador jugador : getJugadores()) {
+            int puntos = jugador.getFichasEnMano().getsumadefichas();
+            if (!jugador.isGanador()) {
+                puntos *= -1;
+            }
+            jugador.setPuntos(puntos);
+            jugador.setPuntosTotales(jugador.getPuntosTotales() + puntos);
         }
     }
 

@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Jugador {
     private String Nombre;
-    private int puntos;
+    private int puntosTotales;
 
     private Vector<Integer> listaPuntos;
     private Soporte fichasEnMano;
@@ -21,6 +21,14 @@ public class Jugador {
 
     public Vector<Integer> getPuntos() {
         return this.listaPuntos;
+    }
+
+    public int getPuntosTotales(){
+        return this.puntosTotales;
+    }
+
+    public void setPuntosTotales(int puntosTotales1) {
+        puntosTotales = puntosTotales1;
     }
 
     public void setPuntos(int puntos) {
@@ -67,6 +75,15 @@ public class Jugador {
     }
 
     /**
+     * Método para extraer el puntaje de un jugador en una ronda determinada
+     * @param n el número de partida en la que se quiere obtener el puntaje
+     * @return el puntaje en formato de String para desplegarlo en la pantalla de puntajes
+     */
+    public String getPuntosEnRondaN(int n) {
+        return Integer.toString(listaPuntos.get(n));
+    }
+
+    /**
      * Metodo para imprimir las fichas contenidas en el soporte del jugador
      */
     public void printFichas() {
@@ -93,7 +110,7 @@ public class Jugador {
     public String toString() {
         return "Jugador{" +
                 "Nombre='" + Nombre + '\'' +
-                ", puntos=" + puntos +
+                ", puntos=" + puntosTotales +
                 ", fichasEnMano=" + fichasEnMano +
                 ", puedoempezar=" + puedoempezar +
                 ", ganador=" + ganador +
