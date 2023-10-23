@@ -2,6 +2,9 @@ package poo.rummikub;// package src;
 
 import java.util.Vector;
 
+/**
+ * Clase utilizada para crear las jugadas con las fichas del tablero con sus respectivos métodos y atributos.
+ */
     public class Jugada {
         private Vector<Ficha> jugada;
 
@@ -15,8 +18,8 @@ import java.util.Vector;
         }
 
         /**
-         * Metodo para verificar que la secuencia de fichas del tipo escalera sea valido
-         * @return
+         * Método para verificar que la secuencia de fichas del tipo escalera sea válido.
+         * @return un booleano que representa el valor de verdad de la escalera.
          */
         public boolean escaleraValida() {
             int escalera = jugada.size();
@@ -65,8 +68,8 @@ import java.util.Vector;
         }
 
         /**
-         * Metodo el cual verifica si la secuencia de fichas del tipo serie sea valido
-         * @return Un booleano que verifica si la jugada fue correcta
+         * Método el cual verifica si la secuencia de fichas del tipo serie sea válido.
+         * @return un booleano que verifica si la jugada fue correcta.
          */
         public boolean serieValida() {
             int serie = this.jugada.size();
@@ -95,8 +98,8 @@ import java.util.Vector;
         }
 
         /**
-         * Metodo para calcular el valor de una jugada según los puntos de las fichas
-         * @return un valor entero que representa los puntos de la jugada calculada
+         * Método para calcular el valor de una jugada según los puntos de las fichas.
+         * @return un valor entero que representa los puntos de la jugada calculada.
          */
         public int valorJugada(){
             int cont = 0;
@@ -110,23 +113,13 @@ import java.util.Vector;
             return cont;
         }
 
-        public Ficha retirarFicha(int x){
-            Ficha ficha = this.jugada.remove(x);
-            return ficha;
-        }
-
-        public Vector<Ficha> getJugada() {
-            return jugada;
-        }
-
+        /**
+         * Método el cual obtiene la ficha en una posición deseada de la jugada.
+         * @param x recibe el índice de la ficha en la jugada que se desea obtener.
+         * @return retorna la ficha deseada.
+         */
         public Ficha getFichaPos(int x){
                 return this.jugada.get(x);
 
         }
-
-        public int getSizeJugada(){
-            return this.jugada.size();
-        }
-
-
     }

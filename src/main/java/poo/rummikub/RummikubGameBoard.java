@@ -78,6 +78,11 @@ public class RummikubGameBoard {
     @FXML
     private GridPane soporteGridPane;
 
+    /**
+     * método que se invoca automáticamente cuando el "form" que controla esta clase se carga en una escena de JavaFX.
+     * Se encarga de instanciar los objetos de JavaFX existentes en la interfaz para que puedan ser manipulados o interactuar
+     * con ellos por medio de métodos vinculados a eventos de cada objeto.
+     */
     public void initialize() {
         crearBotonesTablero(); // Call a method to create buttons
         crearBotonesSoporte();
@@ -85,6 +90,11 @@ public class RummikubGameBoard {
         this.jugadoresEnTurnoFinal = new Vector<>();
     }
 
+    /**
+     * Se utiliza para crear los botones en tiempo de ejecución. El contenedor gridPane del soporte se declara vacío
+     * previo a la ejecución de la aplicación, así que al inicializarse esta pantalla, se llama este método que instancia
+     * todos los botones respectivos, les asigna un índice, un estilo, y un método de manejo de acceso.
+     */
     private void crearBotonesTablero() {
         botonesTablero = new Button[15][15];
         int rows = 15;
@@ -107,6 +117,11 @@ public class RummikubGameBoard {
         }
     }
 
+    /**
+     * Se utiliza para crear los botones en tiempo de ejecución. El contenedor gridPane del soporte se declara vacío
+     * previo a la ejecución de la aplicación, así que al inicializarse esta pantalla, se llama este método que instancia
+     * todos los botones respectivos, les asigna un índice, un estilo, y un método de manejo de acceso.
+     */
     private void crearBotonesSoporte() {
         int filas = 3;
         int columnas = 15;
@@ -125,6 +140,11 @@ public class RummikubGameBoard {
         }
     }
 
+    /**
+     * Método para controlar los clicks en los botones que representan el tablero. Se asigna durante tiempo de ejecución
+     * a todos los botones del tablero, de modo que no se necesita crear un método único para cada botón.
+     * @param event el click realizado por el jugador. Se utiliza para obtener la referencia al botón que fue presionado.
+     */
     private void manejarClickFichaMatriz(ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
         int[] rowIndex = (int[]) clickedButton.getUserData();
@@ -192,6 +212,11 @@ public class RummikubGameBoard {
         System.out.println("Button clicked at Row " + row + ", Column " + col);
     }
 
+    /**
+     * Método para controlar los clicks en los botones que representan el soporte. Se asigna durante tiempo de ejecución
+     * a todos los botones del soporte, de modo que no se necesita crear un método único para cada botón.
+     * @param event el click realizado por el jugador. Se utiliza para obtener la referencia al botón que fue presionado.
+     */
     private void manejarClickFichaSoporte(ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
 
@@ -203,7 +228,7 @@ public class RummikubGameBoard {
         int tieneFicha = rowIndex[3];
 
         if(fichaActual == null) {
-            System.out.println("entro a que ficha actual no es nula");
+            //System.out.println("entro a que ficha actual no es nula");
             if (tieneFicha == 1) {
                 System.out.println("entró a que el botón clicado sí tiene ficha");
                 this.fichaActual = jugadorActual.escogerficha(indiceOriginal);
@@ -215,11 +240,11 @@ public class RummikubGameBoard {
             }
         }
         else {
-            System.out.println("entra a que la ficha actual no era nula y va a cambiar la referencia");
+            //System.out.println("entra a que la ficha actual no era nula y va a cambiar la referencia");
             if (vieneDelSoporte && tieneFicha == 1) {
                 // lo que quiere hacer aqui es escoger otra ficha del soporte
                 this.fichaActual = jugadorActual.escogerficha(indiceOriginal);
-                System.out.println("ficha actual: " + fichaActual.getNum() + fichaActual.getColor());
+                //System.out.println("ficha actual: " + fichaActual.getNum() + fichaActual.getColor());
             } else if (vieneDelSoporte && tieneFicha == 0) {
                 this.fichaActual = null;
             }
@@ -231,6 +256,14 @@ public class RummikubGameBoard {
     }
 
 
+    /**
+     * Método llamado por la pantalla inicial cuando el usuario empieza el juego, utilizado para pasarle los nombres a
+     * esta clase y que pueda crear los objetos de tipo Jugador.
+     * @param input1 la cadena de entrada en el campo para el jugador 1
+     * @param input2 la cadena de entrada en el campo para el jugador 2
+     * @param input3 la cadena de entrada en el campo para el jugador 3
+     * @param input4 la cadena de entrada en el campo para el jugador 4
+     */
     public void initNombres(String input1, String input2, String input3, String input4) {
 
         setNombre1(input1);
@@ -238,10 +271,13 @@ public class RummikubGameBoard {
         setNombre3(input3);
         setNombre4(input4);
 
-
         startGame();
     }
 
+    /**
+     * Método que se encarga de iniciar el juego, tanto en la lógica como en la interfaz. Define el valor de variables
+     * importantes e inicializa otras como la partida.
+     */
     private void startGame() {
         this.jugadores.clear(); // para asegurarse que antes de jugar por primera vez no exista referencia a otros jugadores
 
@@ -266,6 +302,11 @@ public class RummikubGameBoard {
         drawTileButton.setText("Tomar ficha (" + pilaActual + ")");
     }
 
+    /**
+     * Método llamado por la pantalla de puntajes cuando el jugador escoge jugar otra partida. Reutiliza las instancias
+     * de los jugadores ya que estos almacenan su "historial" de puntos.
+     * @param jugadores un vector con los jugadores existentes. Se usa un vector ya que no es una cantidad exacta.
+     */
     public void volverAJugar(Vector<Jugador> jugadores) {
         this.jugadores = jugadores;
         this.partida = new Juego(); // se reinicia
@@ -294,6 +335,10 @@ public class RummikubGameBoard {
         drawTileButton.setText("Tomar ficha (" + pilaActual + ")");
     }
 
+    /**
+     * Método aislado del flujo principal del juego para evitar hacerlo un bloque muy grande y perder legibilidad.
+     * Se encarga de crear la instancia del juego a usar durante la partida, y se crean juegos nuevos para cada partida.
+     */
     private Juego getJuego() {
         Juego partida = new Juego();
         Jugador j1 = new Jugador();
@@ -330,6 +375,11 @@ public class RummikubGameBoard {
         return partida;
     }
 
+    /**
+     * Método para actualizar el estado .
+     * Recorre la matriz de botones y les cambia la apariencia (color y texto) para que representen correctamente la
+     * matriz existente en la lógica del juego.
+     */
     private void setSoporteInicial(Jugador jugadorActual) {
 
         indiceSoporte = 0;
@@ -340,7 +390,7 @@ public class RummikubGameBoard {
             Button button = (Button) boton; // convierte el objeto de tipo nodo a un objeto de tipo boton
             if (indiceSoporte < sizeSoporte){// deja de recorrer el arreglo de fichas cuando llegue a la ultima
             Ficha fichaActual = jugadorActual.getFichasEnMano().getficha(indiceSoporte);
-                // como el comodin tiene un 0, se hace una validacion adicional para cambiar el texto a COM
+                // como el comodín tiene un 0, se hace una validación adicional para cambiar el texto a C
                 if(fichaActual.getNum() == 0) {
                     button.setText("C");
                 }
@@ -372,6 +422,11 @@ public class RummikubGameBoard {
         }
     }
 
+    /**
+     * Método para cambiar el estado de la matriz del tablero al cargar el último estado del tablero temporal.
+     * Recorre la matriz de botones y les cambia la apariencia (color y texto) para que representen correctamente la
+     * matriz existente en la lógica del juego.
+     */
     private void cargarTableroTemporal() {
         Mesa tableroTemporal = partida.getTemporalMesa(); // matriz de fichas
         System.out.println("Tablero actual");
@@ -416,6 +471,11 @@ public class RummikubGameBoard {
         }
     }
 
+    /**
+     * Método para cambiar el estado de la matriz del tablero al cargar el último estado del tablero válido.
+     * Recorre la matriz de botones y les cambia la apariencia (color y texto) para que representen correctamente la
+     * matriz existente en la lógica del juego.
+     */
     private void cargarTableroValido() {
         Mesa tableroValido = partida.getTablero(); // matriz de fichas
         System.out.println("Tablero Valido:");
@@ -461,15 +521,25 @@ public class RummikubGameBoard {
     }
 
 
+    /**
+     * Método para obtener un botón de un gridPane por medio de los índices i y j (fila y columna
+     * @param row la posición en las filas del botón a obtener
+     * @param column la posición en las columnas del botón a obtener
+     * @param gridPane la referencia al objeto "gridPane" del que se quiere conseguir un botón
+     * @return la referencia al botón en la posición deseada.
+     */
     private Button getButtonByRowColumnIndex(int row, int column, GridPane gridPane) {
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getRowIndex(node) == row && GridPane.getColumnIndex(node) == column && node instanceof Button) {
                 return (Button) node;
             }
         }
-        return null; // Button not found
+        return null; // Botón no encontrado
     }
 
+    /**
+     * Método para el manejo de clicks sobre el botón "Validar Turno". Es invocado automáticamente.
+     */
     @FXML
     private void manejarBotonValidarTurno() {
         fichaActual = null;
@@ -495,7 +565,7 @@ public class RummikubGameBoard {
                 }
 
                 partida.getTablero().copiarMesa(partida.getTemporalMesa());
-                partida.getTablero().sonpartede();
+                partida.getTablero().sonParteDe();
 
                 cantidadPreviaDeFichas = partida.getTablero().getCantFichas();
 
@@ -520,6 +590,9 @@ public class RummikubGameBoard {
         }
     }
 
+    /**
+     * Método para el manejo de clicks sobre el botón "Tomar Ficha". Es invocado automáticamente.
+     */
     @FXML
     private void manejarBotonTomarFicha() {
         fichaActual = null;
@@ -548,6 +621,7 @@ public class RummikubGameBoard {
                 currentPlayerLabel.setText("Jugando: " + jugadorActual.getNombre());
             }
             else {
+                drawTileButton.setText("Pasar turno");
                 if (jugadoresEnTurnoFinal.size() == jugadores.size()) {
                     partida.sumarPuntosPilaEnCero();
                     terminarPartida();
@@ -582,6 +656,11 @@ public class RummikubGameBoard {
         }
     }
 
+    /**
+     * Método para cargar la ventana de puntajes cuando se termina la partida. No está vinculado a un botón directamente,
+     * pero se invoca cuando alguno de los botones que cambian el estado de la pantalla es presionado y las condiciones
+     * para terminar la partida se cumplen.
+     */
     private void terminarPartida() {
         Stage currentStage = (Stage) gameGrid.getScene().getWindow();
 
@@ -608,21 +687,43 @@ public class RummikubGameBoard {
         }
     }
 
+    /**
+     * Método de configuración/seteo para modificar el atributo ligado al nombre del primer jugador.
+     * @param nombre1 la cadena de texto ingresada por el usuario al lanzar la aplicación.
+     */
     public void setNombre1(String nombre1) {
         this.nombre1 = nombre1;
     }
 
+    /**
+     * Método de configuración/seteo para modificar el atributo ligado al nombre del segundo jugador.
+     * @param nombre2 la cadena de texto ingresada por el usuario al lanzar la aplicación.
+     */
     public void setNombre2(String nombre2) {
         this.nombre2 = nombre2;
     }
 
+    /**
+     * Método de configuración/seteo para modificar el atributo ligado al nombre del tercer jugador.
+     * @param nombre3 la cadena de texto ingresada por el usuario al lanzar la aplicación.
+     */
     public void setNombre3(String nombre3) {
         this.nombre3 = nombre3;
     }
 
+    /**
+     * Método de configuración/seteo para modificar el atributo ligado al nombre del cuarto jugador.
+     * @param nombre4 la cadena de texto ingresada por el usuario al lanzar la aplicación.
+     */
     public void setNombre4(String nombre4) {
         this.nombre4 = nombre4;
     }
+
+    /**
+     * Método apartado para mostrar mensajes como alerta al usuario, con el objetivo de reutilizar el código y no repetir
+     * el bloque de instrucciones cada vez que se desea imprimir un mensaje.
+     * @param errorMessage la cadena de texto que se desea mostrar al usuario.
+     */
     private void showErrorMessage(String errorMessage) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");

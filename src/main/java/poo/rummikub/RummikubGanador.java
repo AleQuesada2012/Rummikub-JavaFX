@@ -65,7 +65,7 @@ public class RummikubGanador {
 
 
     /**
-     * método que se invoca automáticamente cuando el "form" que controla esta clase se carga en una escena de JavaFX.
+     * Método que se invoca automáticamente cuando el "form" que controla esta clase se carga en una escena de JavaFX.
      * Se encarga de instanciar los objetos de JavaFX existentes en la interfaz para que puedan ser manipulados o interactuar
      * con ellos por medio de métodos vinculados a eventos de cada objeto.
      */
@@ -82,6 +82,11 @@ public class RummikubGanador {
         player4Column.setCellValueFactory(new PropertyValueFactory<>("jugador4"));
     }
 
+    /**
+     * Método invocado por el tablero de juego cuando la partida se termina, con el objetivo de pasar las referencias a
+     * los jugadores que se crearon inicialmente.
+     * @param jugadores el vector que contiene las referencias a los jugadores instanciados.
+     */
     public void recibirJugadores(Vector<Jugador> jugadores) {
         this.jugadores = jugadores;
 
@@ -110,6 +115,10 @@ public class RummikubGanador {
         winnerLabel.setText("¡El ganador es: " + nombreDelGanador + " con " + puntajeMayor + " puntos!");
     }
 
+    /**
+     * Método para crear las filas en la tabla
+     * @param rondasJugadas
+     */
     private void generarFilas(int rondasJugadas) {
         String numRonda;
         String puntaje1;
@@ -136,7 +145,7 @@ public class RummikubGanador {
 
     /**
      * Método para cerrar la pantalla de puntajes y volver a abrir la pantalla de juego
-     * Se encarga de cargar una nueva partida donde se van a ir acumulando los puntajes
+     * Se encarga de cargar una nueva partida donde se van a ir acumulando los puntajes dentro de cada jugador
      */
     @FXML
     public void jugarOtraVez() {
@@ -165,8 +174,12 @@ public class RummikubGanador {
         }
     }
 
+    /**
+     * Método que se llama automáticamente cuando se presiona el botón de "Terminar". Contiene las instrucciones necesarias
+     * para crear una pantalla de cierre, y si se selecciona la confirmación, se encarga de cerrar apropiadamente la aplicación.
+     */
     public void terminarJuego() {
-        // Create a confirmation dialog
+        // Se crea un diálogo de confirmación para evitar que el jugador cierre accidentalmente el programa.
         Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationDialog.setTitle("Saliendo del juego...");
         confirmationDialog.setHeaderText("Gracias por jugar!");
@@ -178,16 +191,25 @@ public class RummikubGanador {
         // Se muestra el diálogo y se espera la respuesta del usuario
         ButtonType userResponse = confirmationDialog.showAndWait().orElse(ButtonType.CANCEL);
 
-        // Si el usuario da click a OK, se cierra la aplicación
+        // Si el usuario da clic a OK, se cierra la aplicación
         if (userResponse == ButtonType.OK) {
             Platform.exit();
         }
     }
 
+    /**
+     * Método de acceso al contenedor de las referencias a los jugadores dentro de esta clase.
+     * @return un Vector de tipo Jugador que contiene los jugadores (de 2 a 4) que participan en las partidas.
+     */
     public Vector<Jugador> getJugadores() {
         return jugadores;
     }
 
+    /**
+     * Método de acceso específico para un jugador en un índice.
+     * @param x entero de 0 a 3 (si el vector es de tamaño 4) que representa el índice al que se desea acceder
+     * @return el jugador que se encontraba en esa posición del vector.
+     */
     private Jugador jugadorEnIndice(int x) {
         return jugadores.get(x);
     }
