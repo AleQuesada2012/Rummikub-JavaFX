@@ -6,13 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class HelloApplication extends Application {
+public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("RummikubStartScreen.fxml"));
-        primaryStage.setTitle("Rummikub - Starting Screen");
-        primaryStage.setScene(new Scene(root, 400, 400));
+        primaryStage.setTitle("Rummikub - Pantalla de Inicio");
+        primaryStage.setScene(new Scene(root, 450, 400));
         primaryStage.show();
     }
 

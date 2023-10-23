@@ -74,7 +74,7 @@ public class RummikubGanador {
         // aquí se instancian los objetos que pertenecen a la interfaz de la pantalla de puntajes
         data = FXCollections.observableArrayList();
 
-        // Set up cell value factories for columns
+        // Se configuran las "Cell Vallue Factory" para las columnas, lo que permite crear las filas en tiempo de ejecución.
         roundNumberColumn.setCellValueFactory(new PropertyValueFactory<>("numRonda"));
         player1Column.setCellValueFactory(new PropertyValueFactory<>("jugador1"));
         player2Column.setCellValueFactory(new PropertyValueFactory<>("jugador2"));
@@ -172,13 +172,13 @@ public class RummikubGanador {
         confirmationDialog.setHeaderText("Gracias por jugar!");
         confirmationDialog.setContentText("¿Está seguro que desea salir? se perderá el progreso de las partidas jugadas.");
 
-        // Add "OK" and "Cancel" buttons
+        // Se agregan botones de confirmación y anulación del cierre del juego
         confirmationDialog.getButtonTypes().setAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // Show the dialog and wait for the user's response
+        // Se muestra el diálogo y se espera la respuesta del usuario
         ButtonType userResponse = confirmationDialog.showAndWait().orElse(ButtonType.CANCEL);
 
-        // If the user clicks "OK," exit the application
+        // Si el usuario da click a OK, se cierra la aplicación
         if (userResponse == ButtonType.OK) {
             Platform.exit();
         }

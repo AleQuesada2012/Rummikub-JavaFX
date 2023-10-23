@@ -11,11 +11,11 @@
          <children>
             <Label fx:id="currentPlayerLabel" alignment="TOP_LEFT" prefHeight="17.0" prefWidth="151.0" text="Jugador Actual: playerName" textAlignment="CENTER" wrapText="true" />
             <Label fx:id="turnLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="151.0" text="Turno Actual: turnCounter" textAlignment="CENTER" wrapText="true" />
-            <Button fx:id="validateTurnButton" mnemonicParsing="false" onAction="#handleValidateTurnButton" text="Validar turno" />
-            <Button fx:id="drawTileButton" mnemonicParsing="false" onAction="#handleDrawTileButton" text="Tomar ficha" wrapText="true" />
+            <Button fx:id="validateTurnButton" mnemonicParsing="false" onAction="#manejarBotonValidarTurno" text="Validar turno" />
+            <Button fx:id="drawTileButton" mnemonicParsing="false" onAction="#manejarBotonTomarFicha" text="Tomar ficha" wrapText="true" />
          </children>
          <padding>
-            <Insets top="5.0" />
+            <Insets left="5.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
       <Separator layoutY="31.0" prefHeight="17.0" prefWidth="1280.0" />

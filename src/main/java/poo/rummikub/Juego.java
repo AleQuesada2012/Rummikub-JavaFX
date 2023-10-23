@@ -4,9 +4,9 @@ import java.util.Vector;
 
 public class Juego {
 
-    private Mesa Tablero;
+    private Mesa tablero;
 
-    private Mesa temporalmesa;
+    private Mesa temporalMesa;
 
     private Vector<Jugador> jugadores;
 
@@ -15,8 +15,8 @@ public class Juego {
 
 
     public Juego() {
-        Tablero = new Mesa();
-        temporalmesa = new Mesa(1);
+        tablero = new Mesa();
+        temporalMesa = new Mesa(1);
         jugadores = new Vector<>();
     }
 
@@ -25,12 +25,10 @@ public class Juego {
     }
 
 
-
-
-
     public void agregarjugador(Jugador jugador){
         jugadores.add(jugador);
     }
+
 
     public int determinarOrden() {
         int maxficha = -1;
@@ -38,7 +36,7 @@ public class Juego {
 
         for (int i = 0; i < this.jugadores.size(); i++) {
             Jugador jugador = this.jugadores.get(i);
-            jugador.agregarFicha(Tablero.agarrarpila());
+            jugador.agregarFicha(tablero.agarrarpila());
             for (Ficha ficha : jugador.getFichasEnMano().getFichas()) {
                 if (ficha.getNum() > maxficha) {
                     maxficha= ficha.getNum();
@@ -69,6 +67,7 @@ public class Juego {
         }
         if(ganador!=null){
             ganador.setPuntos(cont);
+            ganador.setPuntosTotales(ganador.getPuntosTotales() + cont);
         }
     }
 
@@ -97,7 +96,7 @@ public class Juego {
     public void agarrarfichas(){
         for(Jugador jugador :  jugadores) {
             for (int i = 0; i < 13; i++) {
-                jugador.agregarFicha((Tablero.agarrarpila()));
+                jugador.agregarFicha((tablero.agarrarpila()));
             }
         }
 
@@ -117,18 +116,18 @@ public class Juego {
 
 
     public void retirarFicha(int x, int y){
-        Ficha temp = Tablero.getMatrizFichas()[x][y];
-        Tablero.getMatrizFichas()[x][y] = null;
+        Ficha temp = tablero.getMatrizFichas()[x][y];
+        tablero.getMatrizFichas()[x][y] = null;
 
     }
 
-    public Mesa getTemporalmesa() {
-        return temporalmesa;
+    public Mesa getTemporalMesa() {
+        return temporalMesa;
     }
 
     public void actualizarMesa(){
-        if(temporalmesa.matrizValida()){
-            Tablero.copiarMesa(temporalmesa);
+        if(temporalMesa.matrizValida()){
+            tablero.copiarMesa(temporalMesa);
         }
     }
 
@@ -138,7 +137,7 @@ public class Juego {
     }
 
     public Mesa getTablero() {
-        return Tablero;
+        return tablero;
     }
 
     public Vector<Jugador> getJugadores() {
